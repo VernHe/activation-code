@@ -12,4 +12,8 @@ var (
 	TooManyRequests           = NewError(10000007, "请求过多")
 	DuplicateKey              = NewError(10000008, "数据已存在")
 	NoPermission              = NewError(10000009, "没有权限")
+
+	CardNotFound       = NewError(20010000, "激活码找不到")
+	CardNotAvailable   = NewError(20010001, "激活码不可用")
+	DeviceNotAvailable = NewError(20010002, "设备不可用")
 )

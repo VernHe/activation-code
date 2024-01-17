@@ -1,13 +1,12 @@
 package card
 
 import (
-	"errors"
-	"fmt"
-	"time"
-
 	"configuration-management/internal/biz/card"
 	"configuration-management/pkg/app"
 	"configuration-management/pkg/errcode"
+	"errors"
+	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,7 +38,7 @@ func (handler *Handler) Identity(c *gin.Context) {
 	code, err := handler.CardService.GetCardByValue(req.Value)
 	if err != nil {
 		if errors.Is(err, errcode.NotFound) {
-			app.NewResponse(c).ToErrorResponse(errcode.NotFound.WithDetails(err.Error()))
+			app.NewResponse(c).ToErrorResponse(errcode.CardNotFound.WithDetails(err.Error()))
 			return
 		}
 		fmt.Println(err)
@@ -47,9 +46,26 @@ func (handler *Handler) Identity(c *gin.Context) {
 		return
 	}
 
+	// 检查是否过期
+	location, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		app.NewResponse(c).ToErrorResponse(errcode.ServerError.WithDetails(err.Error()))
+		return
+	}
+	if code.ExpiredAt != nil && time.Now().In(location).After(*code.ExpiredAt) {
+		app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("激活码已过期"))
+		return
+	}
+
 	// 检查激活码的状态是否合法
 	if code.Status == card.StatusLocked || code.Status == card.StatusDeleted {
-		app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("激活码不可用"))
+		app.NewResponse(c).ToErrorResponse(errcode.CardNotAvailable.WithDetails("激活码不可用"))
+		return
+	}
+
+	// 激活码已经被使用，检查设备是否匹配
+	if code.Status == card.StatusUsed && code.SEID != req.SEID {
+		app.NewResponse(c).ToErrorResponse(errcode.DeviceNotAvailable.WithDetails("设备不匹配"))
 		return
 	}
 
@@ -65,18 +81,6 @@ func (handler *Handler) Identity(c *gin.Context) {
 		}
 		resp.Card = activatedCode
 		app.NewResponse(c).ResponseOK(resp)
-		return
-	}
-
-	// 检查是否过期
-	if code.ExpiredAt != nil && time.Now().After(*code.ExpiredAt) {
-		app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("激活码已过期"))
-		return
-	}
-
-	// 激活码已经被使用，检查设备是否匹配
-	if code.Status == card.StatusUsed && code.SEID != req.SEID {
-		app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("设备不匹配"))
 		return
 	}
 
