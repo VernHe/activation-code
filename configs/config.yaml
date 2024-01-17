@@ -1,0 +1,25 @@
+Server:
+  RunMode: debug
+  HttpPort: 52669
+  ReadTimeout: 60
+  WriteTimeout: 60
+App:
+  DefaultPageSize: 10
+  MaxPageSize: 100
+  LogSavePath: storage/logs
+  LogFileName: app
+  LogFileExt: .log
+  PrivateKeyFilePath: ./storage/keys/private_server.pem
+  PublicKeyFilePath: ./storage/keys/public_client.pem
+
+Database:
+  DBType: mysql
+  Username: configmanagement  # 填写你的数据库账号
+  Password: qweasdzxc123@configmanagement  # 填写你的数据库密码
+  Host: srv422472.hstgr.cloud:3306
+  DBName: configmanagement
+  TablePrefix:
+  Charset: utf8mb4
+  ParseTime: True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
