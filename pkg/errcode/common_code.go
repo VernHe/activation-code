@@ -16,4 +16,5 @@ var (
 	CardNotFound       = NewError(20010000, "激活码找不到")
 	CardNotAvailable   = NewError(20010001, "激活码不可用")
 	DeviceNotAvailable = NewError(20010002, "设备不可用")
+	CardExpired        = NewError(20010003, "激活码已过期")
 )

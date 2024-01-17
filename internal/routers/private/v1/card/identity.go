@@ -53,7 +53,7 @@ func (handler *Handler) Identity(c *gin.Context) {
 		return
 	}
 	if code.ExpiredAt != nil && time.Now().In(location).After(*code.ExpiredAt) {
-		app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("激活码已过期"))
+		app.NewResponse(c).ToErrorResponse(errcode.CardExpired.WithDetails("激活码已过期"))
 		return
 	}
 
