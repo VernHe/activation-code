@@ -9,13 +9,13 @@ import (
 	"configuration-management/pkg/app"
 	"configuration-management/pkg/errcode"
 	"configuration-management/pkg/logger"
-	"configuration-management/utils/biz"
 
 	"github.com/gin-gonic/gin"
 )
 
 type CreateCardsRequest struct {
 	Minutes  int    `json:"minutes"`
+	Hours    int    `json:"hours"`
 	Days     int    `json:"days"`
 	TimeType string `json:"time_type"`
 	Count    int    `json:"count" binding:"required"`
@@ -57,21 +57,22 @@ func (handler *Handler) CreateCards(c *gin.Context) {
 	}
 
 	// 对时间类型和时间进行校验
-	if !biz.IsValidTimeType(req.TimeType, req.Days, req.Minutes) {
-		global.Logger.WithFields(logger.Fields{
-			"req":  req,
-			"user": userInfo,
-		}).Error("时间类型和时间不匹配")
-		app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("时间类型和时间不匹配"))
-		return
-	}
+	//if !biz.IsValidTimeType(req.TimeType, req.Days, req.Minutes) {
+	//	global.Logger.WithFields(logger.Fields{
+	//		"req":  req,
+	//		"user": userInfo,
+	//	}).Error("时间类型和时间不匹配")
+	//	app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("时间类型和时间不匹配"))
+	//	return
+	//}
 
 	// 创建
 	newCards, err := handler.CardService.CreateCards(card.CreateCardsArgs{
 		UserID:   userInfo.UserId,
 		UserName: userInfo.Username,
 		MaxCnt:   currentUser.MaxCnt,
-		Minutes:  req.Minutes,
+		//Minutes:  req.Minutes,
+		Hours:    req.Hours,
 		Days:     req.Days,
 		TimeType: req.TimeType,
 		Remark:   req.Remark,

@@ -14,6 +14,7 @@ type Card struct {
 	UserID    string     `json:"user_id"`                                                 // 用户ID，关联到用户表中的id字段
 	UserName  string     `json:"user_name"`                                               // 创建激活码的用户名
 	Days      int        `json:"days"`                                                    // 有效天数
+	Hours     int        `json:"hours"`                                                   // 有效小时数
 	Minutes   int        `json:"minutes"`                                                 // 有效分钟数
 	ExpiredAt *time.Time `json:"expired_at" gorm:"default:NULL type:timestamp"`           // 过期时间
 	TimeType  string     `json:"time_type"`                                               // 时间类型 hourly-小时, daily-天数, weekly-周数, monthly-月数, yearly-年数
@@ -36,6 +37,7 @@ type CardView struct {
 	UserID    string `json:"user_id"`              // 用户ID，关联到用户表中的id字段
 	UserName  string `json:"user_name"`            // 创建激活码的用户名
 	Days      int    `json:"days"`                 // 有效天数
+	Hours     int    `json:"hours"`                // 有效小时数
 	Minutes   int    `json:"minutes"`              // 有效分钟数
 	ExpiredAt string `json:"expired_at"`           // 过期时间
 	TimeType  string `json:"time_type"`            // 时间类型 hourly-小时, daily-天数, weekly-周数, monthly-月数, yearly-年数
@@ -89,6 +91,7 @@ func (card *Card) ToView(appOptions []apps.AppOption) CardView {
 		UserID:    card.UserID,
 		UserName:  card.UserName,
 		Days:      card.Days,
+		Hours:     card.Hours,
 		Minutes:   card.Minutes,
 		ExpiredAt: expiredAt,
 		TimeType:  card.TimeType,

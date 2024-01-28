@@ -144,6 +144,7 @@ func (s *service) CreateCards(args CreateCardsArgs) ([]Card, error) {
 			UserID:    args.UserID,
 			UserName:  args.UserName,
 			Minutes:   args.Minutes,
+			Hours:     args.Hours,
 			TimeType:  args.TimeType,
 			Days:      args.Days,
 			Value:     utils.GenerateActivationKeyByApp(app.CardPrefix, app.CardLength),
@@ -176,6 +177,7 @@ func (s *service) UpdateCard(args UpdateCardArgs) error {
 	args.CurrentCard.Status = args.Status
 	args.CurrentCard.SEID = args.SEID
 	args.CurrentCard.Minutes = args.Minutes
+	args.CurrentCard.Hours = args.Hours
 	args.CurrentCard.Days = args.Days
 	args.CurrentCard.TimeType = args.TimeType
 	args.CurrentCard.Remark = args.Remark

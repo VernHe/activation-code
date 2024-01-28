@@ -7,7 +7,6 @@ import (
 	"configuration-management/pkg/app"
 	"configuration-management/pkg/errcode"
 	"configuration-management/pkg/logger"
-	"configuration-management/utils/biz"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +18,7 @@ type UpdateCardRequest struct {
 	SEID     string `json:"seid"`
 	TimeType string `json:"time_type"`
 	Minutes  int    `json:"minutes"`
+	Horus    int    `json:"hours"`
 	Days     int    `json:"days"`
 	Remark   string `json:"remark"`
 }
@@ -96,25 +96,26 @@ func (handler *Handler) UpdateCard(c *gin.Context) {
 	}
 
 	// 检查时间类型和时间
-	if !biz.IsValidTimeType(req.TimeType, req.Days, req.Minutes) {
-		global.Logger.WithFields(logger.Fields{
-			"req":  req,
-			"user": userInfo,
-		}).Error("时间类型和时间不匹配")
-		app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("时间类型和时间不匹配"))
-		return
-	}
+	//if !biz.IsValidTimeType(req.TimeType, req.Days, req.Minutes) {
+	//	global.Logger.WithFields(logger.Fields{
+	//		"req":  req,
+	//		"user": userInfo,
+	//	}).Error("时间类型和时间不匹配")
+	//	app.NewResponse(c).ToErrorResponse(errcode.InvalidParams.WithDetails("时间类型和时间不匹配"))
+	//	return
+	//}
 
 	if err := handler.CardService.UpdateCard(card.UpdateCardArgs{
 		UserId:      userId,
 		CurrentCard: currentCard,
 		ID:          req.ID,
 		Status:      req.Status,
-		Minutes:     req.Minutes,
-		Days:        req.Days,
-		TimeType:    req.TimeType,
-		SEID:        req.SEID,
-		Remark:      req.Remark,
+		//Minutes:     req.Minutes,
+		Hours:    req.Horus,
+		Days:     req.Days,
+		TimeType: req.TimeType,
+		SEID:     req.SEID,
+		Remark:   req.Remark,
 	}); err != nil {
 		global.Logger.Error("update card failed", err)
 		app.NewResponse(c).ToErrorResponse(errcode.NotFound.WithDetails(err.Error()))

@@ -17,6 +17,7 @@ type CreateCardsArgs struct {
 	UserName string `json:"user_name"` // 用户ID，关联到用户表中的id字段
 	MaxCnt   int    `json:"max_cnt"`   // 最大生成数量
 	Minutes  int    `json:"minutes"`   // 有效分钟数
+	Hours    int    `json:"hours"`     // 有效小时数
 	Days     int    `json:"days"`      // 有效天数
 	TimeType string `json:"time_type"` // 时间类型
 	Remark   string `json:"remark"`    // 备注信息
@@ -30,6 +31,7 @@ type UpdateCardArgs struct {
 	ID            string `json:"id"`              // 激活码唯一标识符(UUID)
 	Status        int    `json:"status"`          // 状态: 0-未使用, 1-已使用, 2-已锁定, 3-已删除
 	Minutes       int    `json:"minutes"`         // 有效分钟数
+	Hours         int    `json:"hours"`           // 有效小时数
 	Days          int    `json:"days"`            // 有效天数
 	TimeType      string `json:"time_type"`       // 时间类型
 	IMEI          string `json:"imei"`            // 使用的设备IMEI
