@@ -10,7 +10,7 @@ import (
 
 type CreateAppRequest struct {
 	Name       string `json:"name" form:"name" binding:"required"`
-	CardLength int    `json:"card_length" form:"card_length" binding:"min=1,max=32"`
+	CardLength int    `json:"card_length" form:"card_length" binding:"min=1"`
 	CardPrefix string `json:"card_prefix" form:"card_prefix"`
 }
 
