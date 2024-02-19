@@ -102,7 +102,7 @@ func (handler *Handler) GetCards(c *gin.Context) {
 		}
 	}
 
-	// 时间范围
+	// 时间范围，如果 used_at_date 不为空，则优先使用 used_at_date
 	var usedAtDateRange common.TimeRange
 	if req.UsedAtDate != "" {
 		usedAtDate, err := time.Parse("2006-01-02", req.UsedAtDate)
@@ -120,7 +120,8 @@ func (handler *Handler) GetCards(c *gin.Context) {
 			EndTime:   usedAtDate.Add(24 * time.Hour).Add(-1 * time.Second),
 		}
 	}
-	if (usedAtDateRange.StartTime.IsZero() || usedAtDateRange.EndTime.IsZero()) && req.UsedAtDateRange[0].IsZero() && req.UsedAtDateRange[1].IsZero() {
+	// 如果 used_at_date 为空但是 used_at_date_range 不为空，则使用 used_at_date_range
+	if (usedAtDateRange.StartTime.IsZero() || usedAtDateRange.EndTime.IsZero()) && !req.UsedAtDateRange[0].IsZero() && !req.UsedAtDateRange[1].IsZero() {
 		usedAtDateRange.StartTime = req.UsedAtDateRange[0]
 		usedAtDateRange.EndTime = req.UsedAtDateRange[1]
 	}
