@@ -271,7 +271,7 @@ func (s *service) ActivateCard(args ActivateCardArgs) (Card, error) {
 	now := time.Now()
 	card.UsedAt = &now
 	// Days + Minutes
-	expiredAt := now.AddDate(0, 0, card.Days).Add(time.Minute * time.Duration(card.Minutes))
+	expiredAt := now.AddDate(0, 0, card.Days).Add(time.Minute * time.Duration(card.Minutes)).Add(time.Hour * time.Duration(card.Hours))
 	card.ExpiredAt = &expiredAt
 
 	err = s.repo.UpdateCard(card)
