@@ -49,6 +49,7 @@ func NewRouter() *gin.Engine {
 		cardPublicGroup := publicGroup.Group("")
 		cardPublicGroup.POST("/identity", cardHandler.Identity)
 		cardPublicGroup.POST("/activate", cardHandler.Activate)
+		cardPublicGroup.POST("/check-availability", cardHandler.CheckAvailability)
 
 		// private
 		privateGroup.GET("/card/:value", cardHandler.GetCardByValue)

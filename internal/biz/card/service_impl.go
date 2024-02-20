@@ -389,3 +389,43 @@ func (s *service) SetCardExpiredAt(args SetCardExpiredAtArgs) error {
 
 	return s.repo.UpdateCard(card)
 }
+
+// CheckAvailability 检查激活码是否可用
+func (s *service) CheckAvailability(args CheckAvailabilityArgs) (bool, error) {
+	// 校验激活码是否存在
+	card, err := s.repo.GetCardByValue(args.CardValue)
+	if err != nil {
+		if errors.Is(err, errcode.NotFound) {
+			return false, nil
+		}
+		global.Logger.WithFields(logger.Fields{
+			"value": args.CardValue,
+		}).Error("查询激活码失败", err)
+		return false, err
+	}
+	if card.ID == "" {
+		global.Logger.WithFields(logger.Fields{
+			"value": args.CardValue,
+		}).Info("激活码不存在")
+		return false, nil
+	}
+
+	// 校验激活码状态
+	if card.Status != StatusUsed {
+		global.Logger.WithFields(logger.Fields{
+			"card": card,
+		}).Info("激活码状态不正确")
+		return false, nil
+	}
+
+	// 校验激活码是否过期
+	if card.ExpiredAt.IsZero() || card.ExpiredAt.Before(time.Now()) {
+		global.Logger.WithFields(logger.Fields{
+			"card": card,
+		}).Info("激活码已过期")
+		return false, nil
+	}
+
+	// 状态为已激活且未过期且设备匹配
+	return true, nil
+}

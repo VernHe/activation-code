@@ -85,6 +85,10 @@ type SetCardExpiredAtArgs struct {
 	NewExpiredAt time.Time `json:"new_expired_at"` // 新的过期时间
 }
 
+type CheckAvailabilityArgs struct {
+	CardValue string `json:"card_value"` // 激活码值
+}
+
 type Service interface {
 	GetCardByID(id string) (Card, error)
 	GetCardByValue(value string) (Card, error)
@@ -101,4 +105,5 @@ type Service interface {
 	CheckCardStatus(args CheckCardStatusArgs) (bool, error)
 	ActivateCard(args ActivateCardArgs) (Card, error)
 	SetCardExpiredAt(args SetCardExpiredAtArgs) error
+	CheckAvailability(args CheckAvailabilityArgs) (bool, error)
 }
